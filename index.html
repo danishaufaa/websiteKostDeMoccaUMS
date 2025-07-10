@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
         /* =================================
@@ -186,7 +187,7 @@
         }
 
         .room-card ul {
-            list-style: '✅  ';
+            list-style: '✅ '; /* Menggunakan emoji sebagai bullet point */
             padding-left: 20px;
             margin-bottom: 20px;
         }
@@ -235,10 +236,11 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
 
-        .facility-item svg {
+        .facility-item svg, .facility-item i { /* Menambahkan selektor untuk Font Awesome icon */
             width: 50px;
             height: 50px;
             fill: #8B4513; /* Warna ikon disamakan dengan judul kartu */
+            color: #8B4513; /* Warna untuk Font Awesome ikon */
             margin-bottom: 15px;
         }
 
@@ -256,18 +258,97 @@
             gap: 15px;
         }
 
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer; /* Menandakan bisa diklik */
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+
         .gallery-item img {
             width: 100%;
             height: 200px;
             object-fit: cover;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s, filter 0.3s;
         }
 
-        .gallery-item img:hover {
+        .gallery-item:hover img {
             transform: scale(1.05);
             filter: brightness(1.1);
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 10px;
+            font-size: 0.9em;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+
+        /* Modal untuk zoom gambar */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            padding-top: 60px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         /* Lokasi & Fasilitas Umum */
@@ -343,13 +424,14 @@
 <body>
     <header>
         <h1>Kost DeMocca</h1>
-        <p>Kost Muslimah Dekat Universitas Muhammadiyah Surakarta</p>
+        <p>Kost Muslimah Ideal Dekat Universitas Muhammadiyah Surakarta</p>
     </header>
 
     <nav>
         <a href="#beranda">Beranda</a>
         <a href="#tipe-kamar">Tipe Kamar</a>
-        <a href="#fasilitas">Fasilitas</a> <a href="#galeri">Galeri</a>
+        <a href="#fasilitas">Fasilitas</a>
+        <a href="#galeri">Galeri</a>
         <a href="#lokasi">Lokasi</a>
         <a href="#kontak">Kontak</a>
     </nav>
@@ -357,7 +439,7 @@
     <div class="container">
         <section id="beranda">
             <img src="foto/tampakdepanUMS.jpg" alt="Tampak Depan Kost DeMocca" class="hero-image">
-            <p>Selamat datang di Kost DeMocca! Kami menawarkan solusi hunian yang ideal bagi mahasiswi yang mencari kenyamanan, keamanan, dan lokasi strategis. Nikmati fasilitas lengkap dan suasana yang homey untuk mendukung aktivitas Anda.</p>
+            <p>Selamat datang di Kost DeMocca! Kami hadir sebagai solusi hunian ideal bagi mahasiswi yang mencari kenyamanan, keamanan, dan lokasi strategis. Nikmati fasilitas lengkap serta suasana yang tenang dan homey untuk mendukung setiap aktivitas studi Anda.</p>
         </section>
 
         <hr>
@@ -377,8 +459,8 @@
                             <li>Meja dan Kursi Belajar</li>
                         </ul>
                         <div class="price">
-                            <p class="price-value">Rp 900.000 / bulan</p>
-                            <a href="#kontak">Hubungi Sekarang</a>
+                            <p class="price-value">Mulai dari Rp 900.000 / bulan</p>
+                            <a href="#kontak">Tanya Ketersediaan</a>
                         </div>
                     </div>
                 </div>
@@ -391,24 +473,28 @@
             <h2>Fasilitas Bersama</h2>
             <div class="facilities-grid">
                 <div class="facility-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.41 3 3.86 4.53.5 6.25L12 21.5l11.5-15.25C20.14 4.53 16.59 3 12 3zm0 2c3.54 0 6.63 1.23 9.21 3.09L12 18.66 2.79 8.09C5.37 6.23 8.46 5 12 5z"/></svg>
-                    <h4>Wi-Fi Cepat</h4>
+                    <i class="fas fa-wifi"></i>
+                    <h4>Wi-Fi Kencang</h4>
                 </div>
                 <div class="facility-item">
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 15h-2v-2h2v2zm0-4h-2V9h2v4zm0-6h-2V5h2v2zM8 5h2v2H8V5zm0 4h2v4H8V9zm0 6h2v2H8v-2z"/></svg>
+                    <i class="fas fa-snowflake"></i>
                     <h4>Kulkas Bersama</h4>
                 </div>
                 <div class="facility-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.33 3.67L4.67 6.5C4.26 6.68 4 7.08 4 7.53V11c0 4.17 2.56 7.97 6.42 9.53.51.21 1.09.21 1.6 0C16.44 18.97 19 15.17 19 11V7.53c0-.45-.26-.85-.67-1.03l-6.67-2.83c-.4-.17-.86-.17-1.26 0zM12 12H8v-2h4v2zm2-4h-2V6h2v2z"/></svg>
-                    <h4>Keamanan CCTV</h4>
+                    <i class="fas fa-video"></i>
+                    <h4>CCTV 24 Jam</h4>
                 </div>
                 <div class="facility-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.9 12.68l-1.42-1.42c-.39-.39-1.02-.39-1.41 0L12 16.34l-5.07-5.07c-.39-.39-1.02-.39-1.41 0l-1.42 1.42c-.39.39-.39 1.02 0 1.41l7.12 7.12c.39.39 1.02.39 1.41 0l7.19-7.19c.38-.38.38-1.02 0-1.4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                    <h4>Parkir Motor</h4>
+                    <i class="fas fa-motorcycle"></i>
+                    <h4>Area Parkir Motor</h4>
                 </div>
                  <div class="facility-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8 19H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V5h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V5h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V5h4v4z"/></svg>
+                    <i class="fas fa-utensils"></i>
                     <h4>Dapur Bersama</h4>
+                </div>
+                <div class="facility-item">
+                    <i class="fas fa-tshirt"></i>
+                    <h4>Jemuran Luas</h4>
                 </div>
             </div>
         </section>
@@ -416,34 +502,59 @@
         <hr>
         
         <section id="galeri">
-            <h2>Galeri Kost DeMocca</h2>
+            <h2>Galeri Foto Kost DeMocca</h2>
             <div class="gallery-grid">
-                <div class="gallery-item"><img src="foto/parkir.jpg" alt="Area Parkir"></div>
-                <div class="gallery-item"><img src="foto/dapur.jpg" alt="Dapur Bersama"></div>
-                <div class="gallery-item"><img src="foto/kulkas.jpg" alt="Ruang Tamu"></div>
-                <div class="gallery-item"><img src="foto/jemuran.jpg" alt="Area Jemuran"></div>
-                <div class="gallery-item"><img src="foto/tampakdepan.jpg" alt="Lorong Kost"></div>
+                <div class="gallery-item">
+                    <img src="foto/parkir.jpg" alt="Area Parkir Motor yang Luas">
+                    <div class="overlay">Area Parkir Motor</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="foto/dapur.jpg" alt="Dapur Bersama dengan Peralatan Dasar">
+                    <div class="overlay">Dapur Bersama</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="foto/kulkas.jpg" alt="Kulkas Bersama untuk Kebutuhan Penyimpanan">
+                    <div class="overlay">Kulkas Bersama</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="foto/jemuran.jpg" alt="Area Jemuran yang Aman dan Terbuka">
+                    <div class="overlay">Area Jemuran</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="foto/tampakdepan.jpg" alt="Tampak Depan Kost DeMocca dari Dalam">
+                    <div class="overlay">Tampak Depan Kost</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="foto/kamar_detail.jpg" alt="Detail Interior Kamar Tipe A">
+                    <div class="overlay">Detail Kamar</div>
+                </div>
             </div>
         </section>
         
+        <div id="myModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="img01">
+            <div id="caption"></div>
+        </div>
+
         <hr>
 
         <section id="lokasi">
             <h2>Lokasi Strategis Kami</h2>
             <div class="location-content">
                 <div class="location-map">
-                    <iframe src="https://maps.app.goo.gl/NKFPVihBUBPCuzgY8" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe src="<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.2223983931167!2d110.76624912065662!3d-7.550710864602312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a15fc65fdccc9%3A0x8654aec63f49629c!2skost%20de%20mocca!5e0!3m2!1sen!2sid!4v1752131189278!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <div class="location-nearby">
                     <h3>Kuliner Terdekat 🌮</h3>
                     <ul>
-                        <li><strong>Warung Makan Mbak Yuni:</strong> 1 menit jalan kaki</li>
-                        <li><strong>Burjo & Roti Bakar:</strong> 2 menit jalan kaki</li>
-                        <li><strong>Angkringan Mas Bro:</strong> 3 menit jalan kaki</li>
-                        <li><strong>Indomaret & Alfamart:</strong> 4 menit jalan kaki</li>
+                        <li><strong>Warung Makan Mbak Yuni:</strong> Hanya 1 menit jalan kaki</li>
+                        <li><strong>Burjo & Roti Bakar:</strong> Hanya 2 menit jalan kaki</li>
+                        <li><strong>Angkringan Mas Bro:</strong> Hanya 3 menit jalan kaki</li>
+                        <li><strong>Indomaret & Alfamart:</strong> Hanya 4 menit jalan kaki</li>
                     </ul>
                     <br>
-                    <h3>Fasilitas Umum Terdekat 🏥</h3>
+                    <h3>Poin Penting Terdekat 🏥</h3>
                     <ul>
                         <li><strong>Universitas Muhammadiyah Surakarta:</strong> 3 menit berkendara</li>
                         <li><strong>Transmart Pabelan:</strong> 5 menit berkendara</li>
@@ -458,7 +569,7 @@
 
         <section id="kontak">
             <h2>Tertarik untuk Menyewa?</h2>
-            <p>Jangan ragu untuk bertanya atau jadwal kunjungan. Hubungi kami melalui WhatsApp untuk respon cepat!</p>
+            <p>Jangan ragu untuk bertanya atau menjadwalkan kunjungan. Hubungi kami melalui WhatsApp untuk respon cepat dan informasi lebih lanjut!</p>
             <p><strong>Bapak Agung</strong></p>
             <a href="https://wa.me/628121975021" class="whatsapp-button" target="_blank">Chat via WhatsApp</a>
         </section>
@@ -467,6 +578,39 @@
     <footer>
         <p>© 2025 Kost DeMocca. Hak Cipta Dilindungi.</p>
     </footer>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the image and insert it inside the modal - use its "alt" text as a caption
+        var imgElements = document.querySelectorAll(".gallery-item img");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+
+        imgElements.forEach(function(img) {
+            img.onclick = function(){
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.alt;
+            }
+        });
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() { 
+            modal.style.display = "none";
+        }
+
+        // Close modal when clicking outside the image
+        modal.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 
 </body>
 </html>
